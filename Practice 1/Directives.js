@@ -35,7 +35,7 @@
 		      		var newUrl;
 
 			      		if ($scope.level == 'Routes') {
-			      			 //This won't work...
+			      			 //This won't work..
 			      			 //newUrl = $location.absUrl()+"/scopesView/"+param;
 			      			 newUrl = "scopesView/"+param;
 			      		}
