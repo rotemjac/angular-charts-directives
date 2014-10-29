@@ -1,0 +1,53 @@
+
+
+
+body{
+	background-color: black;
+	height: 100%;
+}
+/* ------------------ Bootstrap override ------------------ */
+.container {
+	height:1280px;
+}
+
+.row {
+	margin-top:10px;
+}
+
+.navbar-default {	
+	margin-top:15px;
+	background-color: #27332B;
+	border-color:inherit;
+}
+
+.well {
+	/*padding : 0px;*/
+}
+
+/* ------------------ Angular-charts override ------------------ */
+.tick {
+	cursor: pointer;
+	font-size: 12px;
+	
+}
+
+svg {
+	width: auto;
+}
+/* ------------------ Regular css ------------------ */
+
+
+.background2 {	
+	background-color: #27332B;
+}
+
+
+.chart {
+	width: auto;
+	height: 500px;
+}
+
+
+
+
+
