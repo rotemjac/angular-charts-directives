@@ -1,4 +1,37 @@
 
+
+
+myApp.service('logicService', function() {
+return {
+		   getCurrentLevel: function (routeName,scopeNumber, resObj) {
+			      		if (routeName == undefined) {
+			      			resObj.currentLevel = 'Routes';
+			      		}
+			      		else if (scopeNumber == undefined) {
+			      			resObj.currentLevel = 'Route';
+			      			resObj.routeName = routeName;
+			      		}
+			      		else {
+			      			resObj.currentLevel = 'Scope';
+			      			resObj.routeName = routeName;
+			      			resObj.scopeNumber = scopeNumber;
+			      		}
+			},
+
+		   getNextUrl: function (dataModel ,param) {
+						if (dataModel.currentLevel == 'Routes') {
+			      			 //This didn't work (in the controller of course)..
+			      			 //newUrl = $location.absUrl()+"/scopesView/"+param;
+			      			 newUrl = "scopesView/"+param;
+			      		}
+			      		else if (dataModel.currentLevel == 'Route') {
+			      			 newUrl = "scopeView/"+dataModel.routeName+"/"+param;
+			      		}
+			      		return newUrl;
+			}
+}
+});
+
 myApp.service('dataService', function() {
 		
 		/* --------------------------------------------------------------------- */

@@ -1,5 +1,5 @@
 
-	myApp.directive('chartWrapper', function($timeout,$location, $routeParams) {
+	myApp.directive('chartWrapper', function($timeout,$location, $routeParams,logicService) {
 		  return {
 		      restrict: 'E',
 		      replace:false,
@@ -8,43 +8,26 @@
 		      	'typeSelected' : '@chartType'
 		      },
 		      link: function ($scope,$element, $attrs) {
-		      			      	
+		      	
+		      	//This model is being passed by reference as the 3rd parameter in the 'setLevelData' method and is being populated there
+		      	$scope.dataModel = {
+		      			currentLevel : undefined,
+		      			routeName : undefined,
+		      			scopeNumber : undefined
+		      	}
+  			      	
 		      	/* --- Determine which level i'm --- */
 		      	$scope.setLevelData = function () {
-		      		
-		      		var routeName = $routeParams.routeName;
-		      		
-		      		if (routeName == undefined) {
-		      			$scope.level = 'Routes';
-		      		}
-		      		else if ($routeParams.scopeNumber == undefined) {
-		      			$scope.level = 'Route';
-		      			$scope.routeName = routeName;
-		      		}
-		      		else {
-		      			$scope.level = 'Scope';
-		      			$scope.routeName = routeName;
-		      			$scope.scopeNumber = $routeParams.scopeNumber;
-		      		}		      		
+		      		logicService.getCurrentLevel($routeParams.routeName,
+		      									 $routeParams.scopeNumber,
+		      									 $scope.dataModel);	      		
 		      	}();
 		      	
-		      	/* --- Route to the relevant view --- */
-		      	
-		      	
-		      	$scope.getRelevantView = function (param) {
-		      		var newUrl;
-
-			      		if ($scope.level == 'Routes') {
-			      			 //This won't work..
-			      			 //newUrl = $location.absUrl()+"/scopesView/"+param;
-			      			 newUrl = "scopesView/"+param;
-			      		}
-			      		else if ($scope.level == 'Route') {
-			      			 newUrl = "scopeView/"+$scope.routeName+"/"+param;
-			      		}	  		
+		      	/* --- Route to the relevant view --- */				      	
+		      	$scope.getRelevantView = function (param) {		      			
+						var newUrl = logicService.getNextUrl($scope.dataModel,param);	  		
 			      		$location.url(newUrl);
-			      		$scope.$apply();//We have to perform apply here - don't know why (we're in angular's scope)
-		      		
+			      		$scope.$apply();//We have to perform apply here - don't know why (we're in angular's scope)		      		
 		      	};
 		      	
 				/* The timeout is in order to make sure this link function is being execute only after the link function of the <chart> directive (it doesn't occur because the delay caused by using 'templateUrl'. I couldn't use the 'template' property because we need to pass the chart type like this: ac-chart='"bar"' , the " with the ' cause problems when trying to make the template inline) */		      	
@@ -60,7 +43,7 @@
 	});
 
 
-	myApp.directive('chart', function(dataService,$timeout) {
+	myApp.directive('chart', function($timeout,dataService) {
 		  return {
 		      restrict: 'E',
 		      replace:true,
@@ -68,7 +51,7 @@
 		      templateUrl:  'templates/directiveTemplates/chart.html', 
 			  link: function ($scope,$element, $attrs) {
 			  	  
-				  	  // ---------------------------------- //					  
+				  	  // -a--------------------------------- //					  
 					  res = dataService.getDataByType($scope.typeSelected);
 					  $scope.data  = res.data;
 				  	 // ---------------------------------- //
